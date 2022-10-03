@@ -1,0 +1,17 @@
+version: "3.8"
+
+services:
+    worker:
+        build: ./worker
+        expose:
+            - 127.0.0.1:8085 #development - loopback only (simply 8085 for production)
+        command: ["python", "-u", "./sandbox.py", "8085"]
+        deploy:
+            replicas: 10
+    frontend:
+        image: nginx:1.23.1
+        volumes: [./frontend/html:/usr/share/nginx/html]
+    reverse_proxy:
+        build: ./reverse_proxy
+        ports:
+            - 127.0.0.1:8080:80 #development - loopback only (simply 8080:80 for production)
