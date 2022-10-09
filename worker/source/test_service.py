@@ -9,7 +9,7 @@ import pytest
 @pytest.mark.unit
 def test_get_ip_address_returns_unknown_ip():
     # Arrange
-    def receive_hostname(hostname):
+    def receive_hostname(_hostname):
         raise socket.gaierror
 
     # Act
@@ -27,5 +27,5 @@ def test_get_ip_address():
     # Assert
     try:
         ipaddress.ip_address(result)
-    except:
+    except ValueError:
         assert False, "Invalid IP address"
