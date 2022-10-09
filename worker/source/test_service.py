@@ -6,6 +6,19 @@ import service
 import pytest
 
 
+
+@pytest.mark.integration
+def test_get_ip_address():
+    # Act
+    result = service._get_ip_address(socket.gethostname(), socket.gethostbyname)
+
+    # Assert
+    try:
+        ipaddress.ip_address(result)
+    except ValueError:
+        assert False, "Invalid IP address"
+
+
 @pytest.mark.unit
 def test_get_ip_address_returns_unknown_ip():
     # Arrange
@@ -19,13 +32,29 @@ def test_get_ip_address_returns_unknown_ip():
     assert result == 'UNKNOWN_IP'
 
 
-@pytest.mark.integration
-def test_get_ip_address():
+@pytest.mark.unit
+def test_get_hostinfo_returns_tuple(mocker):
+    # Arrange
+    mocker.patch('service._get_ip_address', return_value='TEST_IP_ADDRESS')
+    mocker.patch('socket.gethostname', return_value='TEST_HOST_NAME')
+
+    try:
+        # Act
+        _a, _b = service._get_host_info(socket)
+    except ValueError:
+        # Assert
+        assert False, "Expected a tuple in return"
+
+
+@pytest.mark.unit
+def test_prepared_response_includes_required_info(mocker):
+    # Arrange
+    required_info = ('TEST_IP_ADDRESS', 'TEST_HOST_NAME')
+    mocker.patch('service._get_host_info', return_value=required_info)
+
     # Act
-    result = service._get_ip_address(socket.gethostname(), socket.gethostbyname)
+    response = service.prepare_response()
 
     # Assert
-    try:
-        ipaddress.ip_address(result)
-    except ValueError:
-        assert False, "Invalid IP address"
+    contains_required_info = all(x.encode() in response for x in list(required_info))
+    assert contains_required_info, "Could not find '{}' or '{}' in the response '{}'".format(*required_info, response)
