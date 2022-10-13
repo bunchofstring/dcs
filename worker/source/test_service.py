@@ -6,8 +6,17 @@ import service
 import pytest
 
 
+@pytest.mark.system
+def test_listen_to_port():
+    # Act
+    result_socket = service.listen_to("localhost", 0)
 
-@pytest.mark.integration
+    # Assert
+    os_assigned_port = result_socket.getsockname()[1]
+    assert os_assigned_port > 0, "Invalid port assignment"
+
+
+@pytest.mark.system
 def test_get_ip_address():
     # Act
     result = service._get_ip_address(socket.gethostname(), socket.gethostbyname)
@@ -19,7 +28,7 @@ def test_get_ip_address():
         assert False, "Invalid IP address"
 
 
-@pytest.mark.unit
+@pytest.mark.integration
 def test_get_ip_address_returns_unknown_ip():
     # Arrange
     def receive_hostname(_hostname):
@@ -38,12 +47,11 @@ def test_get_hostinfo_returns_tuple(mocker):
     mocker.patch('service._get_ip_address', return_value='TEST_IP_ADDRESS')
     mocker.patch('socket.gethostname', return_value='TEST_HOST_NAME')
 
-    try:
-        # Act
-        _a, _b = service._get_host_info(socket)
-    except ValueError:
-        # Assert
-        assert False, "Expected a tuple in return"
+    # Act
+    hostinfo = service._get_host_info(socket)
+
+    # Assert
+    assert len(hostinfo) == 2, "Expected a tuple with two elements in return"
 
 
 @pytest.mark.unit
@@ -56,5 +64,6 @@ def test_prepared_response_includes_required_info(mocker):
     response = service.prepare_response()
 
     # Assert
-    contains_required_info = all(x.encode() in response for x in list(required_info))
-    assert contains_required_info, "Could not find '{}' or '{}' in the response '{}'".format(*required_info, response)
+    contains_required_info = all(x.encode() in response for x in required_info)
+    assert contains_required_info, "Could not find both '{}' and '{}' in the response '{}'"\
+        .format(*required_info, response)
