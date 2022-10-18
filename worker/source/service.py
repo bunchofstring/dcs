@@ -23,7 +23,8 @@ def process_request(connection_dependency, address):
 def _get_ip_address(hostname, get_host_by_name_dependency):
     try:
         return get_host_by_name_dependency(hostname)
-    except socket.gaierror:
+    except socket.gaierror as e:
+        print("Error getting IP address for {}:\n{}".format(hostname, e))
         return 'UNKNOWN_IP'
 
 

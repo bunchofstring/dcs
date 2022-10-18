@@ -17,7 +17,7 @@ def test_listen_to_port():
 
 
 @pytest.mark.system
-def test_get_ip_address():
+def test_get_valid_ip_address():
     # Act
     result = service._get_ip_address(socket.gethostname(), socket.gethostbyname)
 
@@ -25,7 +25,19 @@ def test_get_ip_address():
     try:
         ipaddress.ip_address(result)
     except ValueError:
-        assert False, "Invalid IP address"
+        assert False, "Invalid IP address: {}".format(result)
+
+
+@pytest.mark.integration
+def test_get_ip_address(mocker):
+    # Arrange
+    spy = mocker.spy(socket, 'gethostbyname')
+
+    # Act
+    result = service._get_ip_address(socket.gethostname(), socket.gethostbyname)
+
+    # Assert
+    spy.assert_called_once()
 
 
 @pytest.mark.integration
