@@ -9,12 +9,12 @@ import threading
 
 sandbox_warmup_duration = 5
 any_port = [0]
-request_count = 1000
+request_count = 2000
 max_duration = 1
 
 
 @pytest.mark.system
-def test_main(mocker):
+def test_main_response(mocker):
     # Arrange
     spy = mocker.spy(service, 'listen_to')
 
@@ -27,28 +27,49 @@ def test_main(mocker):
     assert "Hello from" in response, "Received incorrect response {}".format(response)
 
 
-@pytest.mark.system
-def test_main_performance(mocker):
-    # Arrange
-    spy = mocker.spy(service, 'listen_to')
-    _start_sandbox(any_port)
-    hostinfo = spy.spy_return.getsockname()
-    response_list = []
+class TestPerformance:
 
-    # Act
+    response_list = []
+    hostinfo = None
+
+    @pytest.fixture(autouse=True)
+    def sandbox_lifecycle(self, mocker):
+        # Arrange
+        spy = mocker.spy(service, 'listen_to')
+        _start_sandbox(any_port)
+        self.hostinfo = spy.spy_return.getsockname()
+
+    @pytest.mark.system
+    def test_performance_main_success_rate(self):
+        # Act
+        elapsed = _request_repeatedly_timed(self.hostinfo, self.response_list.append)
+
+        # Assert
+        assert elapsed < max_duration, "Test execution took {} seconds (max is {} seconds)" \
+            .format(elapsed, max_duration)
+
+    @pytest.mark.system
+    def test_performance_main_throughput(self):
+        # Act
+        _request_repeatedly_timed(self.hostinfo, self.response_list.append)
+
+        # Assert
+        response_count = len(self.response_list)
+        assert response_count == request_count, "Expected {} responses, but only received {}" \
+            .format(request_count, response_count)
+
+
+def _request_repeatedly_timed(hostinfo, on_response):
     start_timestamp = time.monotonic()
     for _ in range(request_count):
         response = _fetch_response(hostinfo, "TEST_PERFORMANCE_ANY_REQUEST")
-        response_list.append(response)
+        on_response(response)
     elapsed = time.monotonic() - start_timestamp
-    print("Executed {} request/response iterations in {} seconds".format(request_count, elapsed))
 
-    # Assert
-    response_count = len(response_list)
-    assert elapsed < max_duration, "Test execution took {} seconds (max is {} seconds)" \
-        .format(elapsed, max_duration)
-    assert response_count == request_count, "Expected {} responses, but only received {}"\
-        .format(request_count, response_count)
+    print("Transactions per second = {} (i.e. {} request/response iterations in {} seconds)"
+          .format(request_count / elapsed, request_count, elapsed))
+
+    return elapsed
 
 
 def _fetch_response(hostinfo, message):
@@ -64,7 +85,9 @@ def _new_socket_connection(hostinfo):
 
 
 def _start_sandbox(port):
-    background_thread = threading.Thread(target=sandbox.main, args=[port])
-    background_thread.daemon = True
-    background_thread.start()
+    threading.Thread(
+        target=sandbox.main,
+        args=[port],
+        daemon=True
+    ).start()
     time.sleep(sandbox_warmup_duration)
