@@ -35,6 +35,7 @@ class TestPerformance:
     @pytest.fixture(autouse=True)
     def sandbox_lifecycle(self, mocker):
         # Arrange
+        self.response_list.clear()
         spy = mocker.spy(service, 'listen_to')
         _start_sandbox(any_port)
         self.hostinfo = spy.spy_return.getsockname()
