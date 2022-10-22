@@ -1,6 +1,6 @@
 [![badge](https://github.com/bunchofstring/dcs/actions/workflows/python-app.yml/badge.svg)](https://github.com/bunchofstring/dcs/actions/workflows/python-app.yml)
 # Docker Compose Sandbox (DCS)
-An attempt to build knowledge about containerization, Python, and GitHub Actions. The idea is that this series of experiments and example implementations demonstrates competence and
+An attempt to build knowledge about containerization, Python, and GitHub Actions. The idea is that this series of experiments and example implementations can be used to pass knowledge on to others.
 
 # Get Started
 The following is a guide to get DCS up and running. It also describes how to test the software.
