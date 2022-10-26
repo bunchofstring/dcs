@@ -41,6 +41,7 @@ class TestPerformance:
         self.hostinfo = spy.spy_return.getsockname()
 
     @pytest.mark.system
+    @pytest.mark.timeout(max_duration + sandbox_warmup_duration)
     def test_performance_main_success_rate(self):
         # Act
         elapsed = _request_repeatedly_timed(self.hostinfo, self.response_list.append)
@@ -50,6 +51,7 @@ class TestPerformance:
             .format(elapsed, max_duration)
 
     @pytest.mark.system
+    @pytest.mark.timeout(max_duration + sandbox_warmup_duration)
     def test_performance_main_throughput(self):
         # Act
         _request_repeatedly_timed(self.hostinfo, self.response_list.append)
