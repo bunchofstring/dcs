@@ -8,10 +8,10 @@ import service
 import threading
 
 sandbox_warmup_duration = 5
-any_port = [0]
-request_count = 2000
 max_duration = 1
-performance_timeout = max_duration + sandbox_warmup_duration
+performance_timeout = sandbox_warmup_duration + max_duration
+request_count = 2000
+any_port = [0]
 
 
 @pytest.mark.system
