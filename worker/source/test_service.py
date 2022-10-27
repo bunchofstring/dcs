@@ -7,28 +7,29 @@ import pytest
 import service
 
 
-class MockSocketPackage:
-    # Not strictly necessary, but certainly improves speed and isolation
-    # from the host system state (which is irrelevant to this test)
-    @staticmethod
-    def gethostname():
-        return 'TEST_HOST_NAME'
+@pytest.mark.system
+def test_get_valid_ip_address():
+    # Act
+    result = service._get_ip_address(socket.gethostname(), socket.gethostbyname)
 
-    @staticmethod
-    def gethostbyname(_):
-        return 'TEST_IP_ADDRESS'
+    # Assert
+    try:
+        ipaddress.ip_address(result)
+    except ValueError:
+        assert False, "Invalid IP address: {}".format(result)
 
 
-class MockSocketObject:
-    # Not strictly necessary, but certainly improves speed and isolation
-    # from the host system state (which is irrelevant to this test)
-    @staticmethod
-    def bind(_):
-        pass
+@pytest.mark.integration
+def test_get_ip_address_returns_unknown_ip():
+    # Arrange
+    def receive_hostname(_hostname):
+        raise socket.gaierror
 
-    @staticmethod
-    def listen(_):
-        pass
+    # Act
+    result = service._get_ip_address("TEST_HOSTNAME", receive_hostname)
+
+    # Assert
+    assert result == 'UNKNOWN_IP'
 
 
 @pytest.mark.integration
@@ -80,31 +81,6 @@ def test_prepared_response_includes_required_info(mocker):
         .format(*required_info, response)
 
 
-@pytest.mark.system
-def test_get_valid_ip_address():
-    # Act
-    result = service._get_ip_address(socket.gethostname(), socket.gethostbyname)
-
-    # Assert
-    try:
-        ipaddress.ip_address(result)
-    except ValueError:
-        assert False, "Invalid IP address: {}".format(result)
-
-
-@pytest.mark.integration
-def test_get_ip_address_returns_unknown_ip():
-    # Arrange
-    def receive_hostname(_hostname):
-        raise socket.gaierror
-
-    # Act
-    result = service._get_ip_address("TEST_HOSTNAME", receive_hostname)
-
-    # Assert
-    assert result == 'UNKNOWN_IP'
-
-
 @pytest.mark.unit
 def test_get_hostinfo_returns_tuple():
     # Act
@@ -112,3 +88,27 @@ def test_get_hostinfo_returns_tuple():
 
     # Assert
     assert len(hostinfo) == 2, "Expected a tuple with two elements in return"
+
+
+class MockSocketPackage:
+    # Not strictly necessary, but certainly improves speed and isolation
+    # from the host system state (which is irrelevant to this test)
+    @staticmethod
+    def gethostname():
+        return 'TEST_HOST_NAME'
+
+    @staticmethod
+    def gethostbyname(_):
+        return 'TEST_IP_ADDRESS'
+
+
+class MockSocketObject:
+    # Not strictly necessary, but certainly improves speed and isolation
+    # from the host system state (which is irrelevant to this test)
+    @staticmethod
+    def bind(_):
+        pass
+
+    @staticmethod
+    def listen(_):
+        pass
