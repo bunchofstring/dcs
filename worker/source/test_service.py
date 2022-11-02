@@ -22,7 +22,7 @@ def test_get_valid_ip_address():
 @pytest.mark.integration
 def test_get_ip_address_returns_unknown_ip():
     # Arrange
-    def receive_hostname(_hostname):
+    def receive_hostname(*args, **kwargs):
         raise socket.gaierror
 
     # Act

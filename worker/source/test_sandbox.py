@@ -8,9 +8,9 @@ import service
 import threading
 
 sandbox_warmup_duration = 5
-max_duration = 1
+max_duration = 2
 performance_timeout = sandbox_warmup_duration + max_duration
-request_count = 2000
+request_count = 5000
 any_port = [0]
 
 
@@ -43,37 +43,36 @@ class TestPerformance:
 
     @pytest.mark.system
     @pytest.mark.timeout(performance_timeout)
-    def test_performance_main_success_rate(self):
+    def test_performance_main_throughput(self):
+        # Arrange
+        start_timestamp = time.monotonic()
+
         # Act
-        elapsed = _request_repeatedly_timed(self.hostinfo, self.response_list.append)
+        _request_repeatedly(self.hostinfo)
+        elapsed = time.monotonic() - start_timestamp
+        print("Transactions per second = {} (i.e. {} request/response iterations in {} seconds)"
+              .format(request_count / elapsed, request_count, elapsed))
 
         # Assert
-        assert elapsed < max_duration, "Test execution took {} seconds (max is {} seconds)" \
+        assert elapsed < max_duration, "Execution took {} seconds (max is {} seconds)" \
             .format(elapsed, max_duration)
 
     @pytest.mark.system
     @pytest.mark.timeout(performance_timeout)
-    def test_performance_main_throughput(self):
+    def test_performance_main_success_rate(self):
         # Act
-        _request_repeatedly_timed(self.hostinfo, self.response_list.append)
+        _request_repeatedly(self.hostinfo, self.response_list.append)
 
         # Assert
         response_count = len(self.response_list)
-        assert response_count == request_count, "Expected {} responses, but only received {}" \
+        assert response_count == request_count, "Expected {} responses, but received {}" \
             .format(request_count, response_count)
 
 
-def _request_repeatedly_timed(hostinfo, on_response):
-    start_timestamp = time.monotonic()
+def _request_repeatedly(hostinfo, on_response=lambda noop: None):
     for _ in range(request_count):
         response = _fetch_response(hostinfo, "TEST_PERFORMANCE_ANY_REQUEST")
         on_response(response)
-    elapsed = time.monotonic() - start_timestamp
-
-    print("Transactions per second = {} (i.e. {} request/response iterations in {} seconds)"
-          .format(request_count / elapsed, request_count, elapsed))
-
-    return elapsed
 
 
 def _fetch_response(hostinfo, message):
