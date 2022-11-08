@@ -7,7 +7,7 @@ import pytest
 import service
 import threading
 
-sandbox_warmup_duration = 5
+sandbox_warmup_duration = 1/1000
 max_duration = 1
 performance_timeout = sandbox_warmup_duration + max_duration
 request_count = 2000
