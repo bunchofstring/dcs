@@ -1,79 +1,70 @@
 #!/usr/bin/python
 import socket
+import threading
 import time
 
-import sandbox
 import pytest
+
+import sandbox
 import service
-import threading
-
-sandbox_warmup_duration = 1/1000
-max_duration = 1
-performance_timeout = sandbox_warmup_duration + max_duration
-request_count = 2000
-any_port = [0]
-
-
-@pytest.mark.system
-def test_main_response(mocker):
-    # Arrange
-    spy = mocker.spy(service, 'listen_to')
-
-    # Act
-    _start_sandbox(any_port)
-
-    # Assert
-    hostinfo = spy.spy_return.getsockname()
-    response = _fetch_response(hostinfo, "TEST_ANY_REQUEST")
-    assert "Hello from" in response, "Received incorrect response {}".format(response)
 
 
 class TestPerformance:
+    SANDBOX_WARMUP_DURATION = 5
+    MAX_PERFORMANCE_TEST_DURATION = 2
+    PERFORMANCE_TEST_TIMEOUT_THRESHOLD = SANDBOX_WARMUP_DURATION + MAX_PERFORMANCE_TEST_DURATION
+    PERFORMANCE_REQUEST_COUNT = 5000
+    ANY_PORT = [0]
 
-    response_list = []
     hostinfo = None
+    response_list = None
 
-    @pytest.fixture(autouse=True)
-    def sandbox_lifecycle(self, mocker):
+    @pytest.fixture(scope="class", autouse=True)
+    def sandbox_lifecycle(self, class_mocker):
         # Arrange
-        self.response_list.clear()
-        spy = mocker.spy(service, 'listen_to')
-        _start_sandbox(any_port)
-        self.hostinfo = spy.spy_return.getsockname()
+        spy = class_mocker.spy(service, 'listen_to')
+        _start_sandbox(self.ANY_PORT, self.SANDBOX_WARMUP_DURATION)
+        self.__class__.hostinfo = spy.spy_return.getsockname()
+        self.__class__.response_list = []
 
     @pytest.mark.system
-    @pytest.mark.timeout(performance_timeout)
-    def test_performance_main_success_rate(self):
+    def test_main_response(self):
         # Act
-        elapsed = _request_repeatedly_timed(self.hostinfo, self.response_list.append)
+        response = _fetch_response(self.hostinfo, "TEST_ANY_REQUEST")
 
         # Assert
-        assert elapsed < max_duration, "Test execution took {} seconds (max is {} seconds)" \
-            .format(elapsed, max_duration)
+        assert "Hello from" in response, "Received incorrect response {}".format(response)
 
     @pytest.mark.system
-    @pytest.mark.timeout(performance_timeout)
+    @pytest.mark.timeout(PERFORMANCE_TEST_TIMEOUT_THRESHOLD)
     def test_performance_main_throughput(self):
         # Act
-        _request_repeatedly_timed(self.hostinfo, self.response_list.append)
+        start_timestamp = time.monotonic()
+        _request_repeatedly(self.hostinfo, self.PERFORMANCE_REQUEST_COUNT)
+        elapsed = time.monotonic() - start_timestamp
+        print("Transactions per second = {} (i.e. {} request/response iterations in {} seconds)"
+              .format(self.PERFORMANCE_REQUEST_COUNT / elapsed, self.PERFORMANCE_REQUEST_COUNT, elapsed))
+
+        # Assert
+        assert elapsed < self.MAX_PERFORMANCE_TEST_DURATION, "Execution took {} seconds (max is {} seconds)" \
+            .format(elapsed, self.MAX_PERFORMANCE_TEST_DURATION)
+
+    @pytest.mark.system
+    @pytest.mark.timeout(PERFORMANCE_TEST_TIMEOUT_THRESHOLD)
+    def test_performance_main_success_rate(self):
+        # Act
+        _request_repeatedly(self.hostinfo, self.PERFORMANCE_REQUEST_COUNT, self.response_list.append)
 
         # Assert
         response_count = len(self.response_list)
-        assert response_count == request_count, "Expected {} responses, but only received {}" \
-            .format(request_count, response_count)
+        assert response_count == self.PERFORMANCE_REQUEST_COUNT, "Expected {} responses, but received {}" \
+            .format(self.PERFORMANCE_REQUEST_COUNT, response_count)
 
 
-def _request_repeatedly_timed(hostinfo, on_response):
-    start_timestamp = time.monotonic()
+def _request_repeatedly(hostinfo, request_count, on_response=lambda noop: None):
     for _ in range(request_count):
         response = _fetch_response(hostinfo, "TEST_PERFORMANCE_ANY_REQUEST")
         on_response(response)
-    elapsed = time.monotonic() - start_timestamp
-
-    print("Transactions per second = {} (i.e. {} request/response iterations in {} seconds)"
-          .format(request_count / elapsed, request_count, elapsed))
-
-    return elapsed
 
 
 def _fetch_response(hostinfo, message):
@@ -88,10 +79,10 @@ def _new_socket_connection(hostinfo):
     return s
 
 
-def _start_sandbox(port):
+def _start_sandbox(port, startup_time):
     threading.Thread(
         target=sandbox.main,
         args=[port],
         daemon=True
     ).start()
-    time.sleep(sandbox_warmup_duration)
+    time.sleep(startup_time)

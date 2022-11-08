@@ -1,12 +1,19 @@
 #!/usr/bin/python
 import ipaddress
+import platform
 import socket
 
 import pytest
 
 import service
 
+unsupported_platform = {
+    'condition': platform.system() != 'Linux',
+    'reason': "Test only produces meaningful results in a production-like Linux environment"
+}
 
+
+@pytest.mark.skipif(**unsupported_platform)
 @pytest.mark.system
 def test_get_valid_ip_address():
     # Act
@@ -22,7 +29,7 @@ def test_get_valid_ip_address():
 @pytest.mark.integration
 def test_get_ip_address_returns_unknown_ip():
     # Arrange
-    def receive_hostname(_hostname):
+    def receive_hostname(*_, **__):
         raise socket.gaierror
 
     # Act
@@ -35,11 +42,10 @@ def test_get_ip_address_returns_unknown_ip():
 @pytest.mark.integration
 def test_listen_to_port(mocker):
     # Arrange
-    socket_method_mock = mocker.patch('socket.socket')
     socket_object_mock = MockSocketObject()
+    socket_method_mock = mocker.patch('socket.socket', return_value=socket_object_mock)
     bind_method_mock = mocker.patch.object(socket_object_mock, 'bind', return_value=None)
     listen_method_mock = mocker.patch.object(socket_object_mock, 'listen', return_value=None)
-    socket_method_mock.return_value = socket_object_mock
 
     # Act
     service.listen_to("localhost", 0)

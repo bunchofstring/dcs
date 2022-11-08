@@ -1,6 +1,7 @@
 #!/usr/bin/python
-import service
 import sys
+
+import service
 
 # listen on all interfaces
 host = ''
