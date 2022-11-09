@@ -100,7 +100,7 @@ Percentage of the requests served within a certain time (ms)
 A small collection of useful docker commands.
 1. Disconnect all containers from the default network
    ```shell
-   for i in ` docker network inspect -f '{{range .Containers}}{{.Name}} {{end}}' dap_experiment_default`; do docker network disconnect -f dap_experiment_default $i; done;
+   for i in ` docker network inspect -f '{{range .Containers}}{{.Name}} {{end}}' dcs_default`; do docker network disconnect -f dcs_default $i; done;
    ```
 1. Stop all containers
    ```shell
