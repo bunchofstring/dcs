@@ -39,6 +39,7 @@ def test_get_ip_address_returns_unknown_ip():
     assert result == 'UNKNOWN_IP'
 
 
+# Tests the implementation instead of the result. Low ROI to create and maintain this :(
 @pytest.mark.integration
 def test_listen_to_port(mocker):
     # Arrange
@@ -96,9 +97,10 @@ def test_get_hostinfo_returns_tuple():
     assert len(hostinfo) == 2, "Expected a tuple with two elements in return"
 
 
+# Could be achieved via mocker, but this class is test-framework-agnostic
 class MockSocketPackage:
     # Not strictly necessary, but certainly improves speed and isolation
-    # from the host system state (which is irrelevant to this test)
+    # from the host system state (which is irrelevant to this test).
     @staticmethod
     def gethostname():
         return 'TEST_HOST_NAME'
@@ -108,6 +110,7 @@ class MockSocketPackage:
         return 'TEST_IP_ADDRESS'
 
 
+# Could be achieved via mocker, but this class is test-framework-agnostic
 class MockSocketObject:
     # Not strictly necessary, but certainly improves speed and isolation
     # from the host system state (which is irrelevant to this test)
