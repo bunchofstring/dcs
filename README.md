@@ -7,8 +7,10 @@ Below are some features of DCS
 1. Workers are protected by an intermediary
 1. Tests help keep workers healthy
 
-# System Diagram
-![](doc/resources/sandbox_overview.drawio.png)
+Below is a high-level diagram of the software in this repo and some tools that support its ongoing development. Note that for maintenance purposes the editable diagram is embedded in the image file at [doc/resources/sandbox_overview.drawio.png](doc/resources/sandbox_overview.drawio.png). To update the diagram, use the web-based WYSIWYG editor at https://diagrams.net/ to arrange boxes, lines, etc.
+
+<br>
+<img src="doc/resources/sandbox_overview.drawio.png" width=900>
 
 # Get Started
 The following is a guide to get DCS up and running. It also describes how to test the software.
@@ -22,21 +24,24 @@ The following is a guide to get DCS up and running. It also describes how to tes
 | 5.&nbsp;(Optional)&nbsp;Install&nbsp;Python   | Version 3.10 or greater. This step is required to run the Python-based worker or its tests outside of a container. Ref: https://www.python.org/downloads/                                                                                               |
 
 # Test It!
-This repo includes some tests. Notice that the proportion of different test types does not match the classic "test pyramid" shape.
+In addition to the informal manual testing that takes place in development, some tests were automated and they are part of this repo.
+
+## Automated test proportions
+Compare the number of tests for each type (system, integration, and unit). These are categorized in the code using markers of the same name ([an example](https://github.com/bunchofstring/dcs/blob/c6a24bd06a41855a336edbd6e96b99c2296bf35c/worker/source/test_sandbox.py#L30)).
 ```shell
 pytest -m system --collect-only | grep "tests collected" && pytest -m integration --collect-only | grep "tests collected" && pytest -m unit --collect-only | grep "tests collected"
 ```
-Sample output from the command above.
+Sample output from the command above. The first number on each line indicates the number of tests of that type. Types are system, integration, and unit - in that order.
 ```shell
 ================= 4/9 tests collected (5 deselected) in 0.03s ==================
 ================= 2/9 tests collected (7 deselected) in 0.03s ==================
 ================= 3/9 tests collected (6 deselected) in 0.03s ==================
 ```
 
-The first number on each line indicates the number of tests of that type. Types are system, integration, and unit - in that order. Expectation is that numbers at the top are smaller than numbers at the bottom, but this is only a guideline (ref: https://martinfowler.com/articles/2021-test-shapes.html).
+Notice that the proportion of different test types does not match the classic "test pyramid" shape. However, this is only a guideline (ref: https://martinfowler.com/articles/2021-test-shapes.html).
 
 ## Expected behavior
-Staged testing helps facilitate fast feedback on new code changes. The commands below will find tests with the associated marker.
+Staged testing helps facilitate fast feedback on new code changes. The commands below will find and execute tests with the associated marker.
 ```shell
 pytest -vv --durations=0 -s -m unit
 pytest -vv --durations=0 -s -m integration
