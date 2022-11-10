@@ -1,5 +1,6 @@
 #!/usr/bin/python
 import socket
+import threading
 
 
 def listen_to(host, port):
@@ -9,15 +10,27 @@ def listen_to(host, port):
     return my_socket
 
 
-def prepare_response():
+def handle_requests(my_socket):
+    try:
+        while True:
+            (connection, address) = my_socket.accept()
+            response = _process_request(connection, address)
+            connection.sendall(response)
+            connection.close()
+    finally:
+        my_socket.close()
+
+
+def _process_request(connection_dependency, address):
+    request = connection_dependency.recv(1024).decode()
+    print('Connection from {} - received {}'.format(address, request))
+    return _prepare_response()
+
+
+def _prepare_response():
     hostinfo = _get_host_info(socket)
     response = 'HTTP/1.0 200 OK\n\nHello from {} ({})'.format(*hostinfo)
     return response.encode()
-
-
-def process_request(connection_dependency, address):
-    request = connection_dependency.recv(1024).decode()
-    print('Connection from {} - received {}'.format(address, request))
 
 
 def _get_ip_address(hostname, get_host_by_name_dependency):

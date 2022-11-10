@@ -80,7 +80,7 @@ def test_prepared_response_includes_required_info(mocker):
     mocker.patch('service._get_host_info', return_value=required_info)
 
     # Act
-    response = service.prepare_response()
+    response = service._prepare_response()
 
     # Assert
     contains_required_info = all(x.encode() in response for x in required_info)
