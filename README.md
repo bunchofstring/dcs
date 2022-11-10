@@ -7,6 +7,9 @@ Below are some features of DCS
 1. Workers are protected by an intermediary
 1. Tests help keep workers healthy
 
+# System Diagram
+![](doc/resources/sandbox_overview.drawio.png)
+
 # Get Started
 The following is a guide to get DCS up and running. It also describes how to test the software.
 
@@ -102,9 +105,6 @@ Percentage of the requests served within a certain time (ms)
  100%  23272 (longest request)
 ```
 </details>
-
-# System Diagram
-![](doc/resources/sandbox_overview.drawio.png)
 
 # Lessons Learned
 
