@@ -27,7 +27,7 @@ The following is a guide to get DCS up and running. It also describes how to tes
 In addition to the informal manual testing that takes place in development, some tests were automated and they are part of this repo.
 
 ## Automated test proportions
-Compare the number of tests for each type (system, integration, and unit). These are categorized in the code using markers of the same name ([an example](https://github.com/bunchofstring/dcs/blob/c6a24bd06a41855a336edbd6e96b99c2296bf35c/worker/source/test_sandbox.py#L30)).
+Compare the number of tests for each type (system, integration, and unit). These are categorized in the code using markers of the same name ([an example](https://github.com/bunchofstring/dcs/blob/c6a24bd06a41855a336edbd6e96b99c2296bf35c/worker/source/test_sandbox.py#L30)). For marker definitions, see [pytest.ini](pytest.ini).
 ```shell
 pytest -m system --collect-only | grep "tests collected" && pytest -m integration --collect-only | grep "tests collected" && pytest -m unit --collect-only | grep "tests collected"
 ```
