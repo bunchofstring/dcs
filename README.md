@@ -27,11 +27,15 @@ The following is a guide to get DCS up and running. It also describes how to tes
 In addition to the informal manual testing that takes place in development, some tests were automated and they are part of this repo.
 
 ## Automated test proportions
-Compare the number of tests for each type (system, integration, and unit). These are categorized in the code using markers of the same name ([an example](https://github.com/bunchofstring/dcs/blob/c6a24bd06a41855a336edbd6e96b99c2296bf35c/worker/source/test_sandbox.py#L30)). For marker definitions, see [pytest.ini](pytest.ini).
+Some assumptions
+1. Good automated tests are ones that find bugs
+1. Such tests can be expensive to write and maintain
+1. It is good to 
+system, integration, and unit). These are categorized in the code using markers of the same name ([an example](https://github.com/bunchofstring/dcs/blob/c6a24bd06a41855a336edbd6e96b99c2296bf35c/worker/source/test_sandbox.py#L30)). For marker definitions, see [pytest.ini](pytest.ini).
 ```shell
 pytest -m system --collect-only | grep "tests collected" && pytest -m integration --collect-only | grep "tests collected" && pytest -m unit --collect-only | grep "tests collected"
 ```
-Sample output from the command above. The first number on each line indicates the number of tests of that type. Types are system, integration, and unit - in that order.
+The first number on each line indicates the number of tests of that type. Types are system, integration, and unit - in that order. See below for sample output from the command above.
 ```shell
 ================= 4/9 tests collected (5 deselected) in 0.03s ==================
 ================= 2/9 tests collected (7 deselected) in 0.03s ==================
@@ -56,7 +60,7 @@ docker run --rm jordi/ab -t 30 -n 10000 -c 5000 -l http://host.docker.internal:8
 ```
 <details>
   <summary>Output from the above command</summary>
-   
+<br>
 The following is from a MacBook Pro, 2015 model
 ```shell
 Benchmarking host.docker.internal (be patient)
