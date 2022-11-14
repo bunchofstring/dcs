@@ -26,16 +26,12 @@ The following is a guide to get DCS up and running. It also describes how to tes
 # Test It!
 In addition to the informal manual testing that takes place in development, some tests were automated and they are part of this repo.
 
-## Automated test proportions
-Some assumptions
-1. Good automated tests are ones that find bugs
-1. Such tests can be expensive to write and maintain
-1. It is good to 
-system, integration, and unit). These are categorized in the code using markers of the same name ([an example](https://github.com/bunchofstring/dcs/blob/c6a24bd06a41855a336edbd6e96b99c2296bf35c/worker/source/test_sandbox.py#L30)). For marker definitions, see [pytest.ini](pytest.ini).
+## Lightweight test strategy
+Tests are catetorized according to their type - as system, integration, or unit. The test functions are annotated using markers of the same name ([an example](https://github.com/bunchofstring/dcs/blob/c6a24bd06a41855a336edbd6e96b99c2296bf35c/worker/source/test_sandbox.py#L30)). For marker definitions, see [pytest.ini](pytest.ini). Below is a command to quickly count tests of each type.
 ```shell
 pytest -m system --collect-only | grep "tests collected" && pytest -m integration --collect-only | grep "tests collected" && pytest -m unit --collect-only | grep "tests collected"
 ```
-The first number on each line indicates the number of tests of that type. Types are system, integration, and unit - in that order. See below for sample output from the command above.
+The first number on each line indicates the number of tests of that type. Sample output below shows system, integration, and unit - in that order.
 ```shell
 ================= 4/9 tests collected (5 deselected) in 0.03s ==================
 ================= 2/9 tests collected (7 deselected) in 0.03s ==================
@@ -59,9 +55,15 @@ Apache Bench can generate significant load on the system and provides human-read
 docker run --rm jordi/ab -t 30 -n 10000 -c 5000 -l http://host.docker.internal:8080/worker/
 ```
 <details>
-  <summary>Output from the above command</summary>
+  <summary>Sample output from the above command</summary>
 <br>
 The following is from a MacBook Pro, 2015 model
+<ul>
+<li>2.2 GHz Quad-Core Intel Core i7</li>
+<li>16 GB 1600 MHz DDR3</li>
+<li>macOS Monterey</li>
+</ul>
+
 ```shell
 Benchmarking host.docker.internal (be patient)
 Completed 1000 requests
