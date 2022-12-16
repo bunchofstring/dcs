@@ -51,10 +51,11 @@ python3.11 -m pytest -vv --durations=0 -m system
 ```
 Note: The test categories above are intentionally ordered from fastest to slowest. There are other ways to index the tests (e.g. smoke, sanity, etc.) but the organizational scheme was chosen to highlight the nature of each test.
 ## Acceptable performance
-Apache Bench can generate significant load on the system and provides human-readable results. Thanks to a kind Internet stranger named Jordi (https://github.com/jig/docker-ab), it is conveniently packaged and available on Docker Hub. Give it a try! Execute the command below to execute 10,000 requests within 30 seconds.
+Apache Bench can generate significant load on the system and provides human-readable results. Thanks to a kind Internet stranger named Jordi (https://github.com/jig/docker-ab), it is conveniently packaged and available on Docker Hub. Give it a try! Execute the command below to perform 10,000 requests within 30 seconds.
 ```shell
 docker run --rm jordi/ab -t 30 -n 10000 -c 5000 -l http://host.docker.internal:8080/worker/
 ```
+Tip: `host.docker.internal` is the recommended way to resolve a host machine's IP address in this context (ref: https://docs.docker.com/desktop/networking/#i-want-to-connect-from-a-container-to-a-service-on-the-host).
 <details>
   <summary>Sample output from the above command</summary>
 <br>
