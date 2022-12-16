@@ -5,8 +5,27 @@ import time
 
 import pytest
 
-import sandbox
-import service
+import worker.sandbox as sandbox
+import worker.service as service
+
+ANY_PORT = [0]
+
+
+@pytest.mark.unit
+def test_main_service_integration(mocker):
+    # Arrange
+    mocks = {
+        'listen_to': mocker.DEFAULT,
+        'handle_requests': mocker.DEFAULT
+    }
+    service_mock = mocker.patch.multiple('worker.service', **mocks)
+
+    # Act
+    _start_sandbox(ANY_PORT, 0)
+
+    # Assert
+    for mocked_method in mocks:
+        service_mock[mocked_method].assert_called_once()
 
 
 class TestPerformance:
@@ -14,18 +33,19 @@ class TestPerformance:
     MAX_PERFORMANCE_TEST_DURATION = 2
     PERFORMANCE_TEST_TIMEOUT_THRESHOLD = SANDBOX_WARMUP_DURATION + MAX_PERFORMANCE_TEST_DURATION
     PERFORMANCE_REQUEST_COUNT = 5000
-    ANY_PORT = [0]
 
     hostinfo = None
     response_list = None
 
     @pytest.fixture(scope="class", autouse=True)
-    def sandbox_lifecycle(self, class_mocker):
+    def sandbox_lifecycle_warmstart(self, class_mocker):
         # Arrange
         spy = class_mocker.spy(service, 'listen_to')
-        _start_sandbox(self.ANY_PORT, self.SANDBOX_WARMUP_DURATION)
-        self.__class__.hostinfo = spy.spy_return.getsockname()
+        _start_sandbox(ANY_PORT, self.SANDBOX_WARMUP_DURATION)
+        hostinfo = spy.spy_return.getsockname()
+        self.__class__.hostinfo = hostinfo
         self.__class__.response_list = []
+        _fetch_response(hostinfo, "TEST_ANY_REQUEST")
 
     @pytest.mark.system
     def test_main_response(self):

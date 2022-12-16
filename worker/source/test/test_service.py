@@ -2,10 +2,12 @@
 import ipaddress
 import platform
 import socket
+import mock_socket_package
+import mock_socket_object
 
 import pytest
 
-import service
+import worker.service as service
 
 unsupported_platform = {
     'condition': platform.system() != 'Linux',
@@ -43,7 +45,7 @@ def test_get_ip_address_returns_unknown_ip():
 @pytest.mark.integration
 def test_listen_to_port(mocker):
     # Arrange
-    socket_object_mock = MockSocketObject()
+    socket_object_mock = mock_socket_object.MockSocketObject()
     socket_method_mock = mocker.patch('socket.socket', return_value=socket_object_mock)
     bind_method_mock = mocker.patch.object(socket_object_mock, 'bind', return_value=None)
     listen_method_mock = mocker.patch.object(socket_object_mock, 'listen', return_value=None)
@@ -61,7 +63,7 @@ def test_listen_to_port(mocker):
 def test_listen_to_port_returns_object(mocker):
     # Arrange
     socket_method_mock = mocker.patch('socket.socket')
-    socket_object_mock = MockSocketObject()
+    socket_object_mock = mock_socket_object.MockSocketObject()
     mocker.patch.object(socket_object_mock, 'bind', return_value=None)
     mocker.patch.object(socket_object_mock, 'listen', return_value=None)
     socket_method_mock.return_value = socket_object_mock
@@ -77,7 +79,7 @@ def test_listen_to_port_returns_object(mocker):
 def test_prepared_response_includes_required_info(mocker):
     # Arrange
     required_info = ('TEST_IP_ADDRESS', 'TEST_HOST_NAME')
-    mocker.patch('service._get_host_info', return_value=required_info)
+    mocker.patch('worker.service._get_host_info', return_value=required_info)
 
     # Act
     response = service._prepare_response()
@@ -91,33 +93,20 @@ def test_prepared_response_includes_required_info(mocker):
 @pytest.mark.unit
 def test_get_hostinfo_returns_tuple():
     # Act
-    hostinfo = service._get_host_info(MockSocketPackage())
+    hostinfo = service._get_host_info(mock_socket_package)
 
     # Assert
     assert len(hostinfo) == 2, "Expected a tuple with two elements in return"
 
 
-# Could be achieved via mocker, but this class is test-framework-agnostic
-class MockSocketPackage:
-    # Not strictly necessary, but certainly improves speed and isolation
-    # from the host system state (which is irrelevant to this test).
-    @staticmethod
-    def gethostname():
-        return 'TEST_HOST_NAME'
+@pytest.mark.unit
+def test_get_hostinfo_returns_cached_value():
+    # Arrange
+    msp = mock_socket_package
+    hostinfo1 = service._get_host_info(msp)
 
-    @staticmethod
-    def gethostbyname(_):
-        return 'TEST_IP_ADDRESS'
+    # Act
+    hostinfo2 = service._get_host_info(msp)
 
-
-# Could be achieved via mocker, but this class is test-framework-agnostic
-class MockSocketObject:
-    # Not strictly necessary, but certainly improves speed and isolation
-    # from the host system state (which is irrelevant to this test)
-    @staticmethod
-    def bind(_):
-        pass
-
-    @staticmethod
-    def listen(_):
-        pass
+    # Assert
+    assert hostinfo1 is hostinfo2, "Expected the same return object on subsequent calls"

@@ -1,5 +1,5 @@
-FROM python:3.8.13-slim-buster
+FROM python:3.11.0-slim-buster
 
-RUN pip install pandas pyyaml
+RUN pip install pandas pyyaml pytest
 
-COPY source/ ./
+COPY source/ ./source/

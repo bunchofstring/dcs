@@ -1,12 +1,12 @@
 #!/usr/bin/python
+import functools
 import socket
-import threading
 
 
 def listen_to(host, port):
     my_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     my_socket.bind((host, port))
-    my_socket.listen(1)
+    my_socket.listen(5)
     return my_socket
 
 
@@ -41,6 +41,7 @@ def _get_ip_address(hostname, get_host_by_name_dependency):
         return 'UNKNOWN_IP'
 
 
+@functools.cache
 def _get_host_info(socket_dependency):
     hostname = socket_dependency.gethostname()
     ipaddress = _get_ip_address(hostname, socket_dependency.gethostbyname)

@@ -22,13 +22,14 @@ jobs:
     - name: Set up Python
       uses: actions/setup-python@v4
       with:
-        python-version: '3.10'
+        python-version: '3.11'
         cache: 'pip'
     - name: Install dependencies
       run: |
         pip install -r worker/source/requirements.txt
     - name: Run tests
       run: |
-        pytest -vv --durations=0 -s -m unit
-        pytest -vv --durations=0 -s -m integration
-        pytest -vv --durations=0 -s -m system
+        cd worker/source/
+        python3.11 -m pytest -vv --durations=0 -s -m unit
+        python3.11 -m pytest -vv --durations=0 -s -m integration
+        python3.11 -m pytest -vv --durations=0 -s -m system

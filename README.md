@@ -27,7 +27,7 @@ The following is a guide to get DCS up and running. It also describes how to tes
 In addition to the informal manual testing that takes place in development, some tests were automated and they are part of this repo.
 
 ## Lightweight test strategy
-Tests are catetorized according to their type - as system, integration, or unit. The test functions are annotated using markers of the same name ([an example](https://github.com/bunchofstring/dcs/blob/c6a24bd06a41855a336edbd6e96b99c2296bf35c/worker/source/test_sandbox.py#L30)). For marker definitions, see [pytest.ini](pytest.ini). Below is a command to quickly count tests of each type.
+Tests are categorized according to their type - as system, integration, or unit. The test functions are annotated using markers of the same name ([an example](https://github.com/bunchofstring/dcs/blob/c6a24bd06a41855a336edbd6e96b99c2296bf35c/worker/source/test_sandbox.py#L30)). For marker definitions, see [pytest.ini](pytest.ini). Below is a command to quickly count tests of each type.
 ```shell
 pytest -m system --collect-only | grep "tests collected" && pytest -m integration --collect-only | grep "tests collected" && pytest -m unit --collect-only | grep "tests collected"
 ```
@@ -43,11 +43,11 @@ Notice that the proportion of different test types does not match the classic "t
 ## Expected behavior
 Staged testing helps facilitate fast feedback on new code changes. The commands below will find and execute tests with the associated marker.
 ```shell
-pytest -vv --durations=0 -s -m unit
-pytest -vv --durations=0 -s -m integration
-pytest -vv --durations=0 -s -m system
+python3.11 -m pytest -vv --durations=0 -m unit && \
+python3.11 -m pytest -vv --durations=0 -m integration && \
+python3.11 -m pytest -vv --durations=0 -m system
 ```
-Note: The test categories above are intentionally ordered from fastest to slowest and from most tests to fewest tests. There are other ways to index the tests (e.g. smoke, sanity, etc.) but the organizational scheme was chosen to highlight the nature of each test.
+Note: The test categories above are intentionally ordered from fastest to slowest. There are other ways to index the tests (e.g. smoke, sanity, etc.) but the organizational scheme was chosen to highlight the nature of each test.
 ## Acceptable performance
 Apache Bench can generate significant load on the system and provides human-readable results. Thanks to a kind Internet stranger named Jordi (https://github.com/jig/docker-ab), it is conveniently packaged and available on Docker Hub. To give it a try, execute the command below.
 ```shell
@@ -140,4 +140,8 @@ A small collection of useful docker commands.
 1. Stop, rebuild, then start the containers
    ```shell
    docker compose down && docker compose build && docker compose up -d
+   ```
+1. See program output during test execution. Use the `-s` flag as shown in the example below
+   ```
+   python3.11 -m pytest -vv --durations=0 -s -m system
    ```
