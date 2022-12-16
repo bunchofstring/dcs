@@ -29,7 +29,9 @@ In addition to the informal manual testing that takes place in development, some
 ## Lightweight test strategy
 Tests are categorized according to their type - as system, integration, or unit. The test functions are annotated using markers of the same name ([an example](https://github.com/bunchofstring/dcs/blob/c6a24bd06a41855a336edbd6e96b99c2296bf35c/worker/source/test_sandbox.py#L30)). For marker definitions, see [pytest.ini](pytest.ini). Below is a command to quickly count tests of each type.
 ```shell
-pytest -m system --collect-only | grep "tests collected" && pytest -m integration --collect-only | grep "tests collected" && pytest -m unit --collect-only | grep "tests collected"
+pytest -m system --collect-only | grep "tests collected" && \
+pytest -m integration --collect-only | grep "tests collected" && \
+pytest -m unit --collect-only | grep "tests collected"
 ```
 The first number on each line indicates the number of tests of that type. Sample output below shows system, integration, and unit - in that order.
 ```shell
