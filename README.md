@@ -130,8 +130,7 @@ Percentage of the requests served within a certain time (ms)
 
 ## Pytest
 Some useful things about Pytest
-1. Verbose output for test execution
-   In the command to execute tests, enter the following immediately after `pytest`
+1. Verbose output for test execution. In the command to execute tests, enter the following immediately after `pytest`
    ```shell
    -vv --durations=0 -s
    ```
