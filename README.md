@@ -28,7 +28,7 @@ In addition to the informal manual testing that takes place during development, 
 
 The automated tests are categorized according to their type - as system, integration, or unit. The functions themselves are annotated using markers of the same name ([an example](https://github.com/bunchofstring/dcs/blob/c6a24bd06a41855a336edbd6e96b99c2296bf35c/worker/source/test_sandbox.py#L30)). For marker definitions, see [pytest.ini](pytest.ini).
 
-This taxonomy highlights the nature of each test. Even this basic structure can reinforce good practices and provide a basis for measurement. Note that there are other ways to categorize the tests (e.g. smoke, sanity, performance etc.) but the main point is to start measuring! This can improve any practice and it can help tackle difficult questions as the product matures. Which tests are the most valuable? Wich ones are the most expensive to write and execute?
+This taxonomy highlights the nature of each test. Even this basic structure can reinforce good practices and provide a basis for measurement. Note that there are other ways to categorize the tests (e.g. smoke, sanity, performance etc.) but the main point is to start measuring! This can improve any practice and help tackle difficult questions as a product matures. Which tests are the most valuable? Wich ones are the most expensive to write and execute?
 
 Below is a command to quickly count tests of each type. In the output, the first number on each line indicates the number of tests of that type. 
 ```shell
