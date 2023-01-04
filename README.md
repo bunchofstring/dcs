@@ -30,7 +30,7 @@ The automated tests are categorized according to their type - as system, integra
 
 This taxonomy highlights the nature of each test. Even this basic structure can reinforce good practices and provide a basis for measurement. Note that there are other ways to categorize the tests (e.g. smoke, sanity, performance etc.) but the main point is to start measuring! This can improve any practice and help tackle difficult questions as a product matures. Which tests are the most valuable? Wich ones are the most expensive to write and execute?
 
-Below is a command to quickly count tests of each type. In the output, the first number on each line indicates the number of tests of that type. 
+Below is a command to quickly count tests of each type. In the output, the first number on each line indicates the number of tests of that type. Note that the classic "test pyramid" shape is a good guideline, but it is not a strict requirement (ref: https://martinfowler.com/articles/2021-test-shapes.html).
 ```shell
 pytest -m system --collect-only | grep "tests collected" && \
 pytest -m integration --collect-only | grep "tests collected" && \
@@ -38,14 +38,14 @@ pytest -m unit --collect-only | grep "tests collected"
 ```
 <details>
   <summary>Sample output from the above command</summary>
-Sample output below shows system (4), integration (2), and unit (3) tests.
+<br>
+System (4), integration (2), and unit (3) tests.
+
 ```shell
 ================= 4/9 tests collected (5 deselected) in 0.03s ==================
 ================= 2/9 tests collected (7 deselected) in 0.03s ==================
 ================= 3/9 tests collected (6 deselected) in 0.03s ==================
 ```
-
-Notice that the proportion of different test types does not match the classic "test pyramid" shape. However, this is only a guideline (ref: https://martinfowler.com/articles/2021-test-shapes.html).
 </details>
 
 ## Expected behavior
