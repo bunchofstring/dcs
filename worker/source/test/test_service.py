@@ -2,11 +2,11 @@
 import ipaddress
 import platform
 import socket
-import mock_socket_package
-import mock_socket_object
 
 import pytest
 
+from . import mock_socket_object
+from . import mock_socket_package
 import worker.service as service
 
 unsupported_platform = {

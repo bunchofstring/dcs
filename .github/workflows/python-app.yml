@@ -30,6 +30,6 @@ jobs:
     - name: Run tests
       run: |
         cd worker/source/
-        python3.11 -m pytest -vv --durations=0 -s -m unit
-        python3.11 -m pytest -vv --durations=0 -s -m integration
-        python3.11 -m pytest -vv --durations=0 -s -m system
+        pytest -vv --durations=0 -s -m unit
+        pytest -vv --durations=0 -s -m integration
+        pytest -vv --durations=0 -s -m system
