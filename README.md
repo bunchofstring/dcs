@@ -24,7 +24,7 @@ The following is a guide to get DCS up and running. It also describes how to tes
 | 5.&nbsp;(Optional)&nbsp;Install&nbsp;Python   | Version 3.11 or greater. This step is required to run the Python-based worker or its tests outside of a container. Ref: https://www.python.org/downloads/                                                                                               |
 
 # Test It!
-In addition to the informal manual testing that takes place in development, some tests were automated and they are part of this repo.
+In addition to the informal manual testing that takes place in development, some tests were automated and they are part of this repo. The following commands can be executed via shell from the directory where dcs was cloned (i.e. named "dcs" by default).
 
 ## Lightweight test strategy
 Tests are categorized according to their type - as system, integration, or unit. The test functions are annotated using markers of the same name ([an example](https://github.com/bunchofstring/dcs/blob/c6a24bd06a41855a336edbd6e96b99c2296bf35c/worker/source/test_sandbox.py#L30)). For marker definitions, see [pytest.ini](pytest.ini). Below is a command to quickly count tests of each type.
@@ -45,9 +45,9 @@ Notice that the proportion of different test types does not match the classic "t
 ## Expected behavior
 Staged testing helps facilitate fast feedback on new code changes. The commands below will find and execute tests with the associated marker.
 ```shell
-python3.11 -m pytest -vv --durations=0 -m unit && \
-python3.11 -m pytest -vv --durations=0 -m integration && \
-python3.11 -m pytest -vv --durations=0 -m system
+pytest -vv --durations=0 -m unit && \
+pytest -vv --durations=0 -m integration && \
+pytest -vv --durations=0 -m system
 ```
 Note: The test categories above are intentionally ordered from fastest to slowest. There are other ways to index the tests (e.g. smoke, sanity, etc.) but the organizational scheme was chosen to highlight the nature of each test.
 ## Acceptable performance
@@ -120,6 +120,14 @@ Percentage of the requests served within a certain time (ms)
 </details>
 
 # Lessons Learned
+
+## Pytest
+Some useful things about Pytest
+1. Verbose output for test execution
+   In the command to execute tests, enter the following immediately after `pytest`
+   ```shell
+   -vv --durations=0 -s
+   ```
 
 ## Docker and Docker Compose
 A small collection of useful docker commands.
