@@ -24,32 +24,39 @@ The following is a guide to get DCS up and running. It also describes how to tes
 | 5.&nbsp;(Optional)&nbsp;Install&nbsp;Python   | Version 3.11 or greater. This step is required to run the Python-based worker or its tests outside of a container. Ref: https://www.python.org/downloads/                                                                                               |
 
 # Test It!
-In addition to the informal manual testing that takes place in development, some tests were automated and they are part of this repo.
+In addition to the informal manual testing that takes place during development, some tests were automated and they are part of this repo. The commands in this section can be executed via shell from the directory where this repo was cloned (i.e. named "dcs" by default).
 
-## Lightweight test strategy
-Tests are categorized according to their type - as system, integration, or unit. The test functions are annotated using markers of the same name ([an example](https://github.com/bunchofstring/dcs/blob/c6a24bd06a41855a336edbd6e96b99c2296bf35c/worker/source/test_sandbox.py#L30)). For marker definitions, see [pytest.ini](pytest.ini). Below is a command to quickly count tests of each type.
+The automated tests are categorized according to their type - as system, integration, or unit. The functions themselves are annotated using markers of the same name ([an example](https://github.com/bunchofstring/dcs/blob/c6a24bd06a41855a336edbd6e96b99c2296bf35c/worker/source/test_sandbox.py#L30)). For marker definitions, see [pytest.ini](pytest.ini).
+
+This taxonomy highlights the nature of each test. Even this basic structure can reinforce good practices and provide a basis for measurement. Note that there are other ways to categorize the tests (e.g. smoke, sanity, performance etc.) but the main point is to start measuring! This can improve any practice and help tackle difficult questions as a product matures. Which tests are the most valuable? Wich ones are the most expensive to write and execute?
+
+Below is a command to quickly count tests of each type. In the output, the first number on each line indicates the number of tests of that type. Note that the classic "test pyramid" shape is a good guideline, but it is not a strict requirement (ref: https://martinfowler.com/articles/2021-test-shapes.html).
 ```shell
 pytest -m system --collect-only | grep "tests collected" && \
 pytest -m integration --collect-only | grep "tests collected" && \
 pytest -m unit --collect-only | grep "tests collected"
 ```
-The first number on each line indicates the number of tests of that type. Sample output below shows system, integration, and unit - in that order.
+<details>
+  <summary>Sample output from the above command</summary>
+<br>
+System (4), integration (2), and unit (3) tests.
+
 ```shell
 ================= 4/9 tests collected (5 deselected) in 0.03s ==================
 ================= 2/9 tests collected (7 deselected) in 0.03s ==================
 ================= 3/9 tests collected (6 deselected) in 0.03s ==================
 ```
-
-Notice that the proportion of different test types does not match the classic "test pyramid" shape. However, this is only a guideline (ref: https://martinfowler.com/articles/2021-test-shapes.html).
+</details>
 
 ## Expected behavior
 Staged testing helps facilitate fast feedback on new code changes. The commands below will find and execute tests with the associated marker.
 ```shell
-python3.11 -m pytest -vv --durations=0 -m unit && \
-python3.11 -m pytest -vv --durations=0 -m integration && \
-python3.11 -m pytest -vv --durations=0 -m system
+pytest -m unit && \
+pytest -m integration && \
+pytest -m system
 ```
-Note: The test categories above are intentionally ordered from fastest to slowest. There are other ways to index the tests (e.g. smoke, sanity, etc.) but the organizational scheme was chosen to highlight the nature of each test.
+Note: The test categories above are intentionally ordered. The idea is to run many fast tests up front and identify problems as directly as possible.
+
 ## Acceptable performance
 Apache Bench can generate significant load on the system and provides human-readable results. Thanks to a kind Internet stranger named Jordi (https://github.com/jig/docker-ab), it is conveniently packaged and available on Docker Hub. Give it a try! Execute the command below to perform 10,000 requests within 30 seconds.
 ```shell
@@ -120,6 +127,13 @@ Percentage of the requests served within a certain time (ms)
 </details>
 
 # Lessons Learned
+
+## Pytest
+Some useful things about Pytest
+1. Verbose output for test execution. In the command to execute tests, enter the following immediately after `pytest`
+   ```shell
+   -vv --durations=0 -s
+   ```
 
 ## Docker and Docker Compose
 A small collection of useful docker commands.
