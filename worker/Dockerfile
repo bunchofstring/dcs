@@ -1,5 +1,9 @@
 FROM python:3.11.0-slim-buster
 
-RUN pip install pandas pyyaml pytest
-
 COPY source/ ./source/
+
+ENV PYTHONPATH "/source"
+
+RUN pip install -r source/requirements.txt
+
+ENTRYPOINT ["python", "-u", "./source/worker/sandbox.py"]

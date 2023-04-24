@@ -3,9 +3,8 @@ version: "3.8"
 services:
     worker:
         build: ./worker
-        expose:
-            - 127.0.0.1:8085 #development - loopback only (simply 8085 for production)
-        command: ["python", "-u", "./source/worker/sandbox.py", "8085"]
+        expose: [127.0.0.1:8085] #development - loopback only (simply 8085 for production)
+        command: ["8085"]
         deploy:
             replicas: 10
     frontend:
