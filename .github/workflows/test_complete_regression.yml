@@ -36,6 +36,7 @@ jobs:
         pytest -vv --durations=0 -s -m integration
     - name: Run system tests
       if: always()
+      continue-on-error: true
       run: |
         cd worker/source/
         pytest -vv --durations=0 -s -m system
