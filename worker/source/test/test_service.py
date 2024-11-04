@@ -22,10 +22,10 @@ def test_get_valid_ip_address():
     result = service._get_ip_address(socket.gethostname(), socket.gethostbyname)
 
     # Assert
-    #try:
-        #ipaddress.ip_address(result)
-    #except ValueError:
-    assert False, "Invalid IP address: {}".format(result)
+    try:
+        ipaddress.ip_address(result)
+    except ValueError:
+        assert False, "Invalid IP address: {}".format(result)
 
 
 @pytest.mark.integration
@@ -51,7 +51,7 @@ def test_listen_to_port(mocker):
     listen_method_mock = mocker.patch.object(socket_object_mock, 'listen', return_value=None)
 
     # Act
-    #service.listen_to("localhost", 0)
+    service.listen_to("localhost", 0)
 
     # Assert
     socket_method_mock.assert_called_once()
@@ -69,7 +69,7 @@ def test_listen_to_port_returns_object(mocker):
     socket_method_mock.return_value = socket_object_mock
 
     # Act
-    #result_socket = service.listen_to("localhost", 0)
+    result_socket = service.listen_to("localhost", 0)
 
     # Assert
     assert result_socket is not None, "Did not return the resulting socket"
