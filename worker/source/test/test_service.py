@@ -25,7 +25,7 @@ def test_get_valid_ip_address():
     #try:
         #ipaddress.ip_address(result)
     #except ValueError:
-        assert False, "Invalid IP address: {}".format(result)
+    assert False, "Invalid IP address: {}".format(result)
 
 
 @pytest.mark.integration
