@@ -22,9 +22,9 @@ def test_get_valid_ip_address():
     result = service._get_ip_address(socket.gethostname(), socket.gethostbyname)
 
     # Assert
-    try:
+    #try:
         #ipaddress.ip_address(result)
-    except ValueError:
+    #except ValueError:
         assert False, "Invalid IP address: {}".format(result)
 
 
