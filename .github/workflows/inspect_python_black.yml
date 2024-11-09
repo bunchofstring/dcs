@@ -20,4 +20,5 @@ jobs:
           extra-pylint-options: "--fail-under=10"
           use-flake8: false
           use-vulture: true
+          extra-vulture-options: "--min-confidence 100"
           python-version: "3.11"
