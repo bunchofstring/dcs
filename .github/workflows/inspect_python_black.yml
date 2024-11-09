@@ -8,3 +8,15 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: marian-code/python-lint-annotate@v4
+        with:
+          python-root-list: "./tests/*.py"
+          use-black: true
+          use-isort: true
+          use-mypy: true
+          use-pycodestyle: true
+          use-pydocstyle: true
+          extra-pycodestyle-options: "--max-line-length=88"
+          use-pylint: false
+          use-flake8: false
+          use-vulture: true
+          python-version: "3.11"
