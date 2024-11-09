@@ -9,7 +9,7 @@ jobs:
       - uses: actions/checkout@v4
       - uses: marian-code/python-lint-annotate@v4
         with:
-          python-root-list: "./worker/source/*.py"
+          python-root-list: "worker/source/"
           use-black: true
           use-isort: true
           use-mypy: true
