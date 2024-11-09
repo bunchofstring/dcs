@@ -8,6 +8,7 @@
 def gethostname():
     return 'TEST_HOST_NAME'
 
+
 @staticmethod
 def gethostbyname(_):
     return 'TEST_IP_ADDRESS'
