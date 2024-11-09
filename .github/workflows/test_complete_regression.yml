@@ -13,6 +13,7 @@ permissions:
 jobs:
   complete_regression:
     needs: lint
+    if: always()
 
     runs-on: ubuntu-latest
 
