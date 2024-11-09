@@ -16,7 +16,8 @@ jobs:
           use-pycodestyle: true
           use-pydocstyle: true
           extra-pycodestyle-options: "--max-line-length=88"
-          use-pylint: false
+          use-pylint: true
+          extra-pylint-options: "--fail-under=10"
           use-flake8: false
           use-vulture: true
           python-version: "3.11"
