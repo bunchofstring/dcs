@@ -7,9 +7,6 @@ on:
     branches: [ 'master' ]
   workflow_dispatch:
 
-permissions:
-  checks: write
-
 jobs:
   lint:
     runs-on: ubuntu-latest
@@ -32,19 +29,3 @@ jobs:
           flake8: true
           flake8_auto_fix: true
           neutral_check_on_warning: true
-
-#      - uses: marian-code/python-lint-annotate@v4
-#        with:
-#          python-root-list: "worker/source/"
-#          use-black: true
-#          use-isort: true
-#          use-mypy: true
-#          use-pycodestyle: true
-#          use-pydocstyle: true
-#          extra-pycodestyle-options: "--max-line-length=88"
-#          use-pylint: true
-#          extra-pylint-options: "--fail-under=10"
-#          use-flake8: false
-#          use-vulture: true
-#          extra-vulture-options: "--min-confidence 100"
-#          python-version: "3.11"
