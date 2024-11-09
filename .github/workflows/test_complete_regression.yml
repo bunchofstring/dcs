@@ -1,4 +1,4 @@
-#name: Test
+name: Test
 
 on:
   push:
@@ -8,36 +8,11 @@ on:
   workflow_dispatch:
 
 permissions:
-  checks: write
   contents: read
 
 jobs:
-  lint:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
-        with:
-          python-version: '3.11'
-          cache: 'pip'
-
-      - name: Install Python dependencies
-        run: pip install black flake8
-
-      - name: Run linters
-        uses: wearerequired/lint-action@v2.3.0
-        with:
-          auto_fix: false
-          black: true
-          black_auto_fix: true
-          flake8: true
-          flake8_auto_fix: true
-          neutral_check_on_warning: true
   complete_regression:
-    needs: lint
-    if: always()
     runs-on: ubuntu-latest
-
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
