@@ -1,4 +1,4 @@
-[![badge](https://github.com/bunchofstring/dcs/actions/workflows/test_complete_regression.yml/badge.svg)](https://github.com/bunchofstring/dcs/actions/workflows/test_complete_regression.yml)
+[![badge](https://github.com/bunchofstring/dcs/actions/workflows/test.yml/badge.svg)](https://github.com/bunchofstring/dcs/actions/workflows/test.yml)
 # Docker Compose Sandbox (DCS)
 An attempt to build knowledge about containerization, Python, and GitHub Actions. This repo began as a series of mostly unrelated experiments. Eventually, they coalesced into a simple concept.
 
