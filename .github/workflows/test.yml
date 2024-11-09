@@ -12,7 +12,7 @@ permissions:
 
 jobs:
   test_full_regression:
-    name: Full Regression
+    name: Full Regression Test
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
