@@ -1,4 +1,4 @@
-name: Complete regression test
+name: Test
 
 on:
   push:
@@ -11,7 +11,8 @@ permissions:
   contents: read
 
 jobs:
-  test:
+  complete_regression:
+    needs: lint
 
     runs-on: ubuntu-latest
 
