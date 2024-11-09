@@ -1,0 +1,33 @@
+name: Lint
+
+on:
+  push:
+    branches: [ 'master' ]
+  pull_request:
+    branches: [ 'master' ]
+  workflow_dispatch:
+
+permissions:
+  checks: write
+
+jobs:
+  lint_python:
+    name: Python Lint
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+
+      - name: Install Python dependencies
+        run: pip install black flake8
+
+      - name: Run linters
+        uses: wearerequired/lint-action@v2.3.0
+        with:
+          black: true
+          flake8: true
+          continue_on_error: false
+          neutral_check_on_warning: true
