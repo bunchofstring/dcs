@@ -72,7 +72,7 @@ def test_listen_to_port_returns_object(mocker):
     result_socket = service.listen_to("localhost", 0)
 
     # Assert
-    assert result_socket is None, "Did not return the resulting socket"
+    assert result_socket is not None, "Did not return the resulting socket"
 
 
 @pytest.mark.unit
