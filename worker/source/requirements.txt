@@ -4,7 +4,7 @@
 #
 #    pip-compile requirements.in
 #
-attrrrs==22.1.0
+attrs==22.1.0
     # via pytest
 exceptiongroup==1.2.2
     # via pytest
