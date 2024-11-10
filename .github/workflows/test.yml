@@ -26,7 +26,7 @@ jobs:
       - name: Prepare for testing
         id: prepare
         run: |
-          cd worker/sourceeee/
+          cd worker/source/
       - name: Run unit tests
         run: |
           pytest -vv --durations=0 -s -m unit
