@@ -26,17 +26,16 @@ jobs:
       - name: Prepare for testing
         id: prepare
         run: |
-          cd worker/sourceeee/
+          cd worker/source/
       - name: Run unit tests
         run: |
           pytest -vv --durations=0 -s -m unit
       - name: Run integration tests
+        # must use status function, otherwise default is success()
         if: steps.prepare.outcome == 'success' && always()
         run: |
-          echo "Output [${{steps.prepare.outcome}}]"
-          echo "Output [${{steps.prepare.output}}]"
           pytest -vv --durations=0 -s -m integration
       - name: Run system tests
-        if: steps.prepare.outcome == 'success'
+        if: steps.prepare.outcome == 'success' && always()
         run: |
           pytest -vv --durations=0 -s -m system
