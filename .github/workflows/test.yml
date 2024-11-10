@@ -23,18 +23,18 @@ jobs:
       - name: Install dependencies
         run: |
           pip install -r worker/source/requirements.txt
-      - name: Run unit tests
-        if: always()
+      - name: Prepare for testing
+        id: prepare
         run: |
           cd worker/source/
+      - name: Run unit tests
+        run: |
           pytest -vv --durations=0 -s -m unit
       - name: Run integration tests
-        if: always()
+        if: steps.prepare.outcome == 'success'
         run: |
-          cd worker/source/
           pytest -vv --durations=0 -s -m integration
       - name: Run system tests
-        if: always()
+        if: steps.prepare.outcome == 'success'
         run: |
-          cd worker/source/
           pytest -vv --durations=0 -s -m system
