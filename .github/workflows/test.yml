@@ -14,6 +14,9 @@ jobs:
   test_full_regression:
     name: Full Regression Test
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        test-type: [ unit, integration, system ]
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
@@ -23,18 +26,8 @@ jobs:
       - name: Install dependencies
         run: |
           pip install -r worker/source/requirements.txt
-      - name: Run unit tests
+      - name: Run ${{ matrix.test-type }} tests
         if: always()
         run: |
           cd worker/source/
-          pytest -vv --durations=0 -s -m unit
-      - name: Run integration tests
-        if: always()
-        run: |
-          cd worker/source/
-          pytest -vv --durations=0 -s -m integration
-      - name: Run system tests
-        if: always()
-        run: |
-          cd worker/source/
-          pytest -vv --durations=0 -s -m system
+          pytest -vv --durations=0 -s -m ${{ matrix.test-type }}
