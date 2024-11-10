@@ -15,12 +15,14 @@ jobs:
     name: Python Lint
     runs-on: ubuntu-latest
     steps:
+      # Fetch the code to be tested
       - uses: actions/checkout@v4
+
+      # Satisfy remaining requirements to lint the code
       - uses: actions/setup-python@v5
         with:
           python-version: '3.11'
           cache: 'pip'
-
       - name: Install Python dependencies
         run: pip install black flake8
 
@@ -29,8 +31,6 @@ jobs:
       # 1. When all steps above have completed successfully, begin lint execution
       # 2. When failure occurs, then indicate the failure in all associated PR checkers
       # 3. Do NOT halt lint execution (i.e. proceed if possible)
-      # Note: In order to support failure behavior 3 above, the always() status function
-      # appears below to avoid the default, which is success().
       - name: Run linters
         uses: wearerequired/lint-action@v2.3.0
         with:
