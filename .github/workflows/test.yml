@@ -15,7 +15,10 @@ jobs:
     name: Full Regression Test
     runs-on: ubuntu-latest
     steps:
+      # Fetch the code to be tested
       - uses: actions/checkout@v4
+
+      # Satisfy remaining requirements to run the code
       - uses: actions/setup-python@v5
         with:
           python-version: '3.11'
@@ -23,6 +26,14 @@ jobs:
       - name: Install dependencies
         run: |
           pip install -r worker/source/requirements.txt
+
+      # Run tests
+      # Failure behavior
+      # 1. When all steps above have completed successfully, begin test execution
+      # 2. When failure occurs, then indicate the failure in an associated PR checker
+      # 3. Do NOT halt test execution (i.e. proceed to the next test if one exists)
+      # Note: In order to support failure behavior 3 above, the always() status function
+      # appears below to avoid the default, which is success().
       - name: Prepare for testing
         id: prepare
         run: |
@@ -31,7 +42,6 @@ jobs:
         run: |
           pytest -vv --durations=0 -s -m unit
       - name: Run integration tests
-        # must use status function, otherwise default is success()
         if: steps.prepare.outcome == 'success' && always()
         run: |
           pytest -vv --durations=0 -s -m integration
