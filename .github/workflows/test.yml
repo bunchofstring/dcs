@@ -31,8 +31,10 @@ jobs:
         run: |
           pytest -vv --durations=0 -s -m unit
       - name: Run integration tests
-        if: steps.prepare.outcome == 'success'
+        if: always()
         run: |
+          echo "Output [${{steps.prepare.outcome}}]"
+          echo "Output [${{steps.prepare.output}}]"
           pytest -vv --durations=0 -s -m integration
       - name: Run system tests
         if: steps.prepare.outcome == 'success'
