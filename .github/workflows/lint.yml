@@ -29,4 +29,5 @@ jobs:
         with:
           black: true
           flake8: true
+          continue_on_error: false
           neutral_check_on_warning: true
