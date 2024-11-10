@@ -30,8 +30,8 @@ jobs:
       # Run tests
       # Failure behavior
       # 1. When all steps above have completed successfully, begin test execution
-      # 2. When failure occurs, then indicate the failure in an associated PR checker
-      # 3. Do NOT halt test execution (i.e. proceed to the next test if one exists)
+      # 2. When failure occurs, then indicate the failure in the associated PR checker
+      # 3. Do NOT halt test execution (i.e. proceed if possible)
       # Note: In order to support failure behavior 3 above, the always() status function
       # appears below to avoid the default, which is success().
       - name: Prepare for testing

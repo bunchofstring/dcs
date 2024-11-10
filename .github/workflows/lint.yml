@@ -24,6 +24,13 @@ jobs:
       - name: Install Python dependencies
         run: pip install black flake8
 
+      # Run lint
+      # Failure behavior
+      # 1. When all steps above have completed successfully, begin lint execution
+      # 2. When failure occurs, then indicate the failure in all associated PR checkers
+      # 3. Do NOT halt lint execution (i.e. proceed if possible)
+      # Note: In order to support failure behavior 3 above, the always() status function
+      # appears below to avoid the default, which is success().
       - name: Run linters
         uses: wearerequired/lint-action@v2.3.0
         with:
