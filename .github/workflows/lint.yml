@@ -15,14 +15,14 @@ jobs:
     name: Python Lint
     runs-on: ubuntu-latest
     steps:
-      # Fetch the code to be tested
+      # Fetch the code and set up an interpreter
       - uses: actions/checkout@v4
-
-      # Satisfy remaining requirements to lint the code
       - uses: actions/setup-python@v5
         with:
           python-version: '3.11'
           cache: 'pip'
+
+      # Satisfy remaining requirements to lint the code
       - name: Install Python dependencies
         run: pip install black flake8
 
