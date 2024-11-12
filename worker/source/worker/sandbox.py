@@ -9,7 +9,7 @@ host = ''
 
 def main(args):
     if len(args) != 1:
-        raise TypeError("Incorrect number of arguments. Please specify a port number")
+        raise TypeError("Incorrect number of arguments! Please specify a port number")
 
     port = int(args[0])
     my_socket = service.listen_to(host, port)
