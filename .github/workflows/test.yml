@@ -30,7 +30,7 @@ jobs:
       # Run tests
       # 1. When all steps above have completed successfully, begin test execution
       # 2. When failure occurs, then indicate it in the associated PR checker
-      # 3. Do NOT halt test execution (i.e. proceed if possible)
+      # 3. Do NOT stop test execution (i.e. proceed if possible)
       # Note: In order to support 3 above, the always() status function ensures
       # that the conditional is evaluated independently - NOT prepended with with
       # "success() && " (i.e. default)

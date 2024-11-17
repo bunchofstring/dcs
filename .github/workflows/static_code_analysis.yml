@@ -1,4 +1,4 @@
-name: Lint
+#name: Static
 
 on:
   push:
@@ -7,12 +7,12 @@ on:
     branches: [ 'master' ]
   workflow_dispatch:
 
-permissions:
-  checks: write
+#permissions:
+#  checks: write
 
 jobs:
-  lint_python:
-    name: Python Lint
+  static_code_analysis:
+    name: Static Code Analysis
     runs-on: ubuntu-latest
     steps:
       # Fetch the code and set up an interpreter
@@ -22,18 +22,18 @@ jobs:
           python-version: '3.11'
           cache: 'pip'
 
-      # Satisfy remaining requirements to lint the code
-      - name: Install Python dependencies
-        run: pip install black flake8
+      # Satisfy remaining requirements for static code analysis
+      - name: Install dependencies
+        run: pip install pylint black flake8
 
-      # Run lint
       # Failure behavior
-      # 1. When all steps above have completed successfully, begin lint execution
-      # 2. When failure occurs, then indicate the failure in all associated PR checkers
-      # 3. Do NOT halt lint execution (i.e. proceed if possible)
-      - name: Run linters
+      # 1. When all steps above have completed successfully, begin execution
+      # 2. When failure occurs, then indicate it in the originating PR checker
+      # 3. Do NOT stop static code analysis (i.e. proceed if possible)
+      - name: Lint, code style, and formatting
         uses: wearerequired/lint-action@v2.3.0
         with:
+          pylint: true
           black: true
           flake8: true
           continue_on_error: false
