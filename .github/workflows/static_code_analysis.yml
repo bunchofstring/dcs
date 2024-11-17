@@ -7,8 +7,8 @@ on:
     branches: [ 'master' ]
   workflow_dispatch:
 
-permissions:
-  checks: write
+#permissions:
+#  checks: write
 
 jobs:
   static_code_analysis:
@@ -33,7 +33,6 @@ jobs:
       - name: Lint, code style, and formatting
         uses: wearerequired/lint-action@v2.3.0
         with:
-          name: Foo
           pylint: true
           black: true
           flake8: true
